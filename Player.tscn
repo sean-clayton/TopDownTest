@@ -1,0 +1,64 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Player.gd" type="Script" id=1]
+
+[sub_resource type="CapsuleShape" id=1]
+height = 2.0
+
+[sub_resource type="CapsuleMesh" id=2]
+mid_height = 2.0
+
+[sub_resource type="SphereMesh" id=3]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_color = Color( 0, 0.466667, 1, 1 )
+emission_enabled = true
+emission = Color( 0, 0.466667, 1, 1 )
+emission_energy = 1.0
+emission_operator = 0
+emission_on_uv2 = false
+
+[sub_resource type="CubeMesh" id=5]
+size = Vector3( 2, 1, 2 )
+
+[sub_resource type="SpatialMaterial" id=6]
+albedo_color = Color( 1, 0.937255, 0, 1 )
+
+[node name="Player" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="PlayerKinematicBody" type="KinematicBody" parent="."]
+
+[node name="PlayerCollision" type="CollisionShape" parent="PlayerKinematicBody"]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="PlayerMesh" type="MeshInstance" parent="PlayerKinematicBody"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="MeshInstance" type="MeshInstance" parent="PlayerKinematicBody/PlayerMesh"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1 )
+mesh = SubResource( 3 )
+material/0 = SubResource( 4 )
+
+[node name="PlayerTop" type="Position3D" parent="PlayerKinematicBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
+
+[node name="PlayerMiddle" type="Position3D" parent="PlayerKinematicBody"]
+
+[node name="PlayerBottom" type="Position3D" parent="PlayerKinematicBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="PlayerKinematicBody/PlayerBottom"]
+mesh = SubResource( 5 )
+material/0 = SubResource( 6 )
+
+[node name="CameraRig" type="Position3D" parent="."]
+
+[node name="PlayerCamera" type="Camera" parent="CameraRig"]
+transform = Transform( 1, 0, 0, 0, 0.362763, 0.931881, 0, -0.931881, 0.362763, 0, 34.2878, 13.2232 )
+fov = 53.7852
