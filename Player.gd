@@ -2,11 +2,8 @@ extends Spatial
 
 onready var body = $PlayerKinematicBody
 onready var player_bottom = $PlayerKinematicBody/PlayerBottom
-onready var mesh = $PlayerKinematicBody/PlayerMesh
 onready var camera_rig = $CameraRig
 onready var camera = $CameraRig/PlayerCamera
-onready var freefall_ray = $PlayerKinematicBody/FreefallRay
-
 onready var mouse_position_label = get_node("/root/Main/UI/LabelList/MousePosition/Value")
 
 export var gravity = 100
@@ -15,10 +12,6 @@ export var friction = 0.8
 
 var move_direction = Vector3()
 var velocity = Vector3()
-
-const SNAP_DIRECTION = Vector3.DOWN
-const SNAP_LENTH = 2
-var snap_vector = SNAP_DIRECTION * SNAP_LENTH
 
 
 func _ready() -> void:
