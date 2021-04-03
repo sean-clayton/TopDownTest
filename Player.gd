@@ -4,7 +4,9 @@ onready var body = $PlayerKinematicBody
 onready var player_bottom = $PlayerKinematicBody/PlayerBottom
 onready var camera_rig = $CameraRig
 onready var camera = $CameraRig/PlayerCamera
+onready var cursor = $PlayerKinematicBody/Cursor
 onready var mouse_position_label = get_node("/root/Main/UI/LabelList/MousePosition/Value")
+onready var mouse_moving_label = get_node("/root/Main/UI/LabelList/MouseMoving/Value")
 
 export var gravity = 100
 export var speed = 170
@@ -13,13 +15,17 @@ export var friction = 0.8
 var move_direction = Vector3()
 var velocity = Vector3()
 
+var mouse_moving = false
+
+var locked_position = Vector2.ZERO
+
 
 func _ready() -> void:
 	var viewport = get_viewport()
-	var center_of_screen = Vector2.ZERO
-	center_of_screen = viewport.size / 2
+	locked_position = viewport.size / 2
+	locked_position.y -= 64.0
 
-	get_viewport().warp_mouse(center_of_screen)
+	get_viewport().warp_mouse(locked_position)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
@@ -31,8 +37,17 @@ func _physics_process(delta: float) -> void:
 	move(delta)
 	look_at_cursor()
 
+	if mouse_moving:
+		mouse_moving_label.text = "Yes"
+		mouse_moving = false
+	else:
+		mouse_moving_label.text = "No"
 
-func _input(_event: InputEvent) -> void:
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		mouse_moving = true
+
 	if Input.is_action_just_released("ui_cancel"):
 		get_tree().quit()
 
@@ -72,7 +87,7 @@ func look_at_cursor() -> void:
 	var drop_plane = Plane(Vector3.UP, player_bottom.global_transform.origin.y)
 
 	var ray_length = 1000
-	var mouse_position = get_viewport().get_mouse_position()
+	var mouse_position = locked_position
 	var from = camera.project_ray_origin(mouse_position)
 	var to = from + camera.project_ray_normal(mouse_position) * ray_length
 
@@ -82,9 +97,12 @@ func look_at_cursor() -> void:
 	var intersects_at = drop_plane.intersects_ray(from, to)
 	var cursor_pos = Vector3()
 	if intersects_at:
-		cursor_pos = intersects_at + distance
+		cursor_pos = intersects_at
 
-	body.look_at(cursor_pos, Vector3.UP)
-	body.rotation = body.rotation * Vector3.UP
-	if mouse_position_label:
-		mouse_position_label.text = String(mouse_position)
+	cursor.global_transform.origin = cursor_pos
+
+	if mouse_moving:
+		body.look_at(cursor_pos, Vector3.UP)
+		body.rotation = body.rotation * Vector3.UP
+
+	mouse_position_label.text = String(mouse_position)

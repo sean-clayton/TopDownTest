@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
 
@@ -25,6 +25,18 @@ size = Vector3( 2, 1, 2 )
 
 [sub_resource type="SpatialMaterial" id=6]
 albedo_color = Color( 1, 0.937255, 0, 1 )
+
+[sub_resource type="SphereMesh" id=10]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="SpatialMaterial" id=9]
+albedo_color = Color( 1, 0, 0, 1 )
+emission_enabled = true
+emission = Color( 1, 0, 0, 1 )
+emission_energy = 1.0
+emission_operator = 0
+emission_on_uv2 = false
 
 [node name="Player" type="Spatial"]
 script = ExtResource( 1 )
@@ -56,6 +68,12 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0 )
 [node name="MeshInstance" type="MeshInstance" parent="PlayerKinematicBody/PlayerBottom"]
 mesh = SubResource( 5 )
 material/0 = SubResource( 6 )
+
+[node name="Cursor" type="Position3D" parent="PlayerKinematicBody"]
+
+[node name="MeshInstance" type="MeshInstance" parent="PlayerKinematicBody/Cursor"]
+mesh = SubResource( 10 )
+material/0 = SubResource( 9 )
 
 [node name="CameraRig" type="Position3D" parent="."]
 
