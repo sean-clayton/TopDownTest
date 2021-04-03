@@ -21,11 +21,12 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	move_camera_with_body()
+	pass
 
 
 func _physics_process(delta: float) -> void:
 	move(delta)
+	move_camera_with_body()
 	look_at_cursor()
 
 
